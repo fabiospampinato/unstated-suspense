@@ -1,7 +1,7 @@
 {
   "name": "unstated-suspense",
   "description": "Suspend/unsuspend updates propagation from your containers.",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
