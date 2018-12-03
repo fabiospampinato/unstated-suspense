@@ -32,6 +32,9 @@ class App extends Container {
 }
 ```
 
+**Note**: If you call `suspend` N times you should call `unsuspend` N time also to resume updates propagation.
+
+
 ## Related
 
 - **[unstated-with-containers](https://github.com/fabiospampinato/unstated-with-containers)**: Higher-Order Component for subscribing to containers.
