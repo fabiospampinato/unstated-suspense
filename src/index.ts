@@ -7,16 +7,16 @@ import {Container as BaseContainer} from 'unstated';
 
 class Container<State extends object> extends BaseContainer<State> {
 
-  _listeners: Function[];
-  _suspendNr = 0;
-  _updateSuspended = false;
+  private _listeners: Function[];
+  private _suspendNr = 0;
+  private _updateSuspended = false;
 
-  async setState ( updater: State | ( ( prevState: State ) => State ), callback?: () => void ) {
+  async setState ( updater: ( ( prevState: Readonly<State> ) => Partial<State> | State | null) | Partial<State> | State | null, callback?: Function ): Promise<void> {
 
     let nextState;
 
     if ( typeof updater === 'function' ) {
-      nextState = updater ( this.state );
+      nextState = ( updater as Function )( this.state ); //TSC
     } else {
       nextState = updater;
     }
@@ -32,17 +32,17 @@ class Container<State extends object> extends BaseContainer<State> {
 
   }
 
-  suspend () {
+  suspend (): void {
     this._suspendNr++;
   }
 
-  unsuspend ( callback? ) {
+  unsuspend ( callback?: Function ): void {
     if ( !this._suspendNr ) return;
     this._suspendNr--;
     if ( !this._suspendNr && this._updateSuspended ) this._updateEmit ( callback );
   }
 
-  _updateEmit ( callback? ) {
+  private _updateEmit ( callback?: Function ): void {
 
     this._updateSuspended = !!this._suspendNr;
 
@@ -51,7 +51,7 @@ class Container<State extends object> extends BaseContainer<State> {
     const promises = this._listeners.map ( listener => listener () );
 
     Promise.all ( promises ).then ( () => {
-      if ( callback ) callback();
+      if ( callback ) callback ();
     });
 
   }
